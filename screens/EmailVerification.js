@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Formik } from "formik";
 import { ActivityIndicator } from "react-native";
 
 import { colors } from "../components/Colors";
-const { primary } = colors;
+const { secondary, lightGray } = colors;
 
 // Custom components.
 import MainContainer from "../components/Containers/MainContainer";
@@ -16,36 +15,21 @@ import PressableText from "../components/Texts/PressableText";
 import RowContainer from "../components/Containers/RowContainer";
 import IconHeader from "../components/Icons/IconHeader";
 import StyledCodeInput from "../components/Inputs/StyledCodeInput";
+import ResendTimer from "../components/Timers/ResendTimer";
 
+// Infomation/Notes on StyledCodeInput.js & ResendTimer.js
 const EmailVerification = () => {
+  const [pinReady, setPinReady] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+  // Resending email
+  const [activeResend, setActiveResend] = useState(false);
+
   // Code input
   // useState to monitor the value of the code inputted by user.
   const MAX_CODE_LENGTH = 4;
   const [code, setCode] = useState("");
 
-  /* 
-    Toggling succes & error mgs using MsgBox.js then displaying ui messages.
-
-    isSuccessMessage set the initial value to false, because most of the time the messages that will be displayed are error messages rather than success messages.
-  */
-  const [message, setMessage] = useState("");
-  const [isSuccessMessage, setIsSuccessMessage] = useState(false);
-
-  const handleLogin = async (credentials, setSubmitting) => {
-    try {
-      setMessage(null);
-
-      // Call backend
-
-      // Move to next page
-
-      setSubmitting(false);
-    } catch (error) {
-      setMessage("Login failed: " + error.message);
-      setSubmitting(false);
-    }
-  };
-
+  const handleEmailVerification = () => {};
   return (
     <MainContainer>
       <KeyboardAvoidingContainer>
@@ -59,84 +43,35 @@ const EmailVerification = () => {
           code={code}
           setCode={setCode}
           maxLength={MAX_CODE_LENGTH}
+          setPinReady={setPinReady}
         />
 
-        <Formik
-          initialValues={{ email: "", password: "" }}
-          onSubmit={(values, { setSubmitting }) => {
-            if (values.email == "" || values.password == "") {
-              setMessage("Please fill in all fields");
-              setSubmitting(false);
-            } else {
-              handleLogin(values, setSubmitting);
-            }
-          }}
-        >
-          {({
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            values,
-            isSubmitting,
-          }) => (
-            <>
-              <StyledTextInput
-                label="Email Address"
-                icon="email-variant"
-                placeholder="Example: Tom@gmail.com"
-                keyboardType="email-address"
-                onChangeText={handleChange("email")}
-                onBlur={handleBlur("email")}
-                value={values.email}
-                style={{ marginBottom: 25 }}
-              />
+        {!verifying && pinReady && (
+          <RegularButton onPress={handleEmailVerification}>
+            Verify
+          </RegularButton>
+        )}
 
-              <StyledTextInput
-                label="Password"
-                icon="lock-open"
-                placeholder="* * * * * * * * * *"
-                onChangeText={handleChange("password")}
-                onBlur={handleBlur("password")}
-                value={values.password}
-                isPassword={true}
-                style={{ marginBottom: 25 }}
-              />
+        {!verifying && !pinReady && (
+          <RegularButton
+            disabled={true}
+            style={{ backgroundColor: secondary }}
+            textStyle={{ color: lightGray }}
+          >
+            Verify
+          </RegularButton>
+        )}
 
-              {/*
-                  White space is very important because it keeps the shape of the message box.
-                  <MsgBox>{message || " "}</MsgBox>
-                    
-                  If you don't have White space for the MsgBox, the MsgBox component location will disappear within the UI. This will result in other components having to move out of the way for the message to be displayed.
-              */}
-              <MsgBox style={{ marginBottom: 25 }} success={isSuccessMessage}>
-                {message || " "}
-              </MsgBox>
+        {verifying && (
+          <RegularButton>
+            <ActivityIndicator size="small" color="primary" />
+          </RegularButton>
+        )}
 
-              {/* 
-                If isSubmitting === false show login button else show activityIdicator.
-              
-                isSubmitting will be triggered to true. if handleSubmit been triggered. 
-              */}
-              {!isSubmitting && (
-                <RegularButton onPress={handleSubmit}>Login</RegularButton>
-              )}
-              {isSubmitting && (
-                <RegularButton>
-                  <ActivityIndicator size="small" color="primary" />
-                </RegularButton>
-              )}
-
-              <RowContainer>
-                <PressableText onPress={() => {}}>
-                  New Account Sign Up
-                </PressableText>
-                <PressableText onPress={() => {}}>
-                  Forgot Password
-                </PressableText>
-              </RowContainer>
-            </>
-          )}
-        </Formik>
+        <ResendTimer
+          activeResend={activeResend}
+          setActiveResend={setActiveResend}
+        />
       </KeyboardAvoidingContainer>
     </MainContainer>
   );
