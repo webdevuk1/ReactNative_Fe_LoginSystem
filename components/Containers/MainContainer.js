@@ -2,7 +2,6 @@ import React from "react";
 
 // Styled components
 import styled from "styled-components/native";
-import { StatusBarHeight } from "../PhoneDimensions";
 import { colors } from "../Colors";
 const { primary } = colors;
 
@@ -13,7 +12,6 @@ some more padding and make use of the status bar height that we imported. So we 
 const StyledView = styled.View`
   flex: 1;
   padding: 25px;
-  padding-top: ${StatusBarHeight + 30}px;
   background-color: ${primary};
 `;
 

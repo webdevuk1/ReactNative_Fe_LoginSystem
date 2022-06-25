@@ -15,7 +15,7 @@ import RegularButton from "../components/Buttons/RegularButton";
 import PressableText from "../components/Texts/PressableText";
 import RowContainer from "../components/Containers/RowContainer";
 
-const Login = () => {
+const Login = ({ navigation }) => {
   /* 
     Toggling succes & error mgs using MsgBox.js then displaying ui messages.
 
@@ -24,6 +24,11 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const [isSuccessMessage, setIsSuccessMessage] = useState(false);
 
+  // Parameter payload will be used to pass some data along to the new screen
+  const moveTo = (screen, payload) => {
+    navigation.navigate(screen, { ...payload });
+  };
+
   const handleLogin = async (credentials, setSubmitting) => {
     try {
       setMessage(null);
@@ -31,6 +36,7 @@ const Login = () => {
       // Call backend
 
       // Move to next page
+      moveTo("Dashboard");
 
       setSubmitting(false);
     } catch (error) {
@@ -112,10 +118,18 @@ const Login = () => {
               )}
 
               <RowContainer>
-                <PressableText onPress={() => {}}>
+                <PressableText
+                  onPress={() => {
+                    moveTo("Signup");
+                  }}
+                >
                   New Account Sign Up
                 </PressableText>
-                <PressableText onPress={() => {}}>
+                <PressableText
+                  onPress={() => {
+                    moveTo("ForgotPassword");
+                  }}
+                >
                   Forgot Password
                 </PressableText>
               </RowContainer>

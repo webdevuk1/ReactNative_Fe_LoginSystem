@@ -13,13 +13,10 @@ import StyledTextInput from "../components/Inputs/StyledTextInput";
 import MsgBox from "../components/Texts/MsgBox";
 import RegularButton from "../components/Buttons/RegularButton";
 import PressableText from "../components/Texts/PressableText";
+import RowContainer from "../components/Containers/RowContainer";
+import IconHeader from "../components/Icons/IconHeader";
 
-const Signup = ({ navigation }) => {
-  /* 
-    Toggling succes & error mgs using MsgBox.js then displaying ui messages.
-
-    isSuccessMessage set the initial value to false, because most of the time the messages that will be displayed are error messages rather than success messages.
-  */
+const ForgotPassword = ({ navigation }) => {
   const [message, setMessage] = useState("");
   const [isSuccessMessage, setIsSuccessMessage] = useState(false);
 
@@ -28,18 +25,17 @@ const Signup = ({ navigation }) => {
     navigation.navigate(screen, { ...payload });
   };
 
-  const handleSignup = async (credentials, setSubmitting) => {
+  const handleOnSubmit = async (credentials, setSubmitting) => {
     try {
       setMessage(null);
 
       // Call backend
 
       // Move to next page
-      moveTo("EmailVerification");
-
+      moveTo("ResetPassword");
       setSubmitting(false);
     } catch (error) {
-      setMessage("Signup failed: " + error.message);
+      setMessage("Request failed: " + error.message);
       setSubmitting(false);
     }
   };
@@ -47,31 +43,19 @@ const Signup = ({ navigation }) => {
   return (
     <MainContainer>
       <KeyboardAvoidingContainer>
+        <IconHeader name="key" style={{ marginBottom: 30 }} />
         <RegularText style={{ marginBottom: 25 }}>
-          Enter your account credentials
+          Provide the details below to reset your password.
         </RegularText>
 
         <Formik
-          initialValues={{
-            fullName: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-          }}
+          initialValues={{ email: "" }}
           onSubmit={(values, { setSubmitting }) => {
-            if (
-              values.fullName == "" ||
-              values.email == "" ||
-              values.password == "" ||
-              values.confirmPassword == ""
-            ) {
-              setMessage("Please fill in all fields");
-              setSubmitting(false);
-            } else if (values.password == "" || values.confirmPassword == "") {
+            if (values.email == "") {
               setMessage("Please fill in all fields");
               setSubmitting(false);
             } else {
-              handleSignup(values, setSubmitting);
+              handleOnSubmit(values, setSubmitting);
             }
           }}
         >
@@ -84,16 +68,6 @@ const Signup = ({ navigation }) => {
           }) => (
             <>
               <StyledTextInput
-                label="Full Name"
-                icon="account"
-                placeholder="Example: Tom Walt"
-                onChangeText={handleChange("fullName")}
-                onBlur={handleBlur("fullName")}
-                value={values.fullName}
-                style={{ marginBottom: 15 }}
-              />
-
-              <StyledTextInput
                 label="Email Address"
                 icon="email-variant"
                 placeholder="Example: Tom@gmail.com"
@@ -101,29 +75,7 @@ const Signup = ({ navigation }) => {
                 onChangeText={handleChange("email")}
                 onBlur={handleBlur("email")}
                 value={values.email}
-                style={{ marginBottom: 15 }}
-              />
-
-              <StyledTextInput
-                label="Password"
-                icon="lock-open"
-                placeholder="* * * * * * * * * *"
-                onChangeText={handleChange("password")}
-                onBlur={handleBlur("password")}
-                value={values.password}
-                isPassword={true}
-                style={{ marginBottom: 15 }}
-              />
-
-              <StyledTextInput
-                label="Confirm Password"
-                icon="lock-open"
-                placeholder="* * * * * * * * * *"
-                onChangeText={handleChange("confirmPassword")}
-                onBlur={handleBlur("confirmPassword")}
-                value={values.confirmPassword}
-                isPassword={true}
-                style={{ marginBottom: 15 }}
+                style={{ marginBottom: 25 }}
               />
 
               {/*
@@ -142,7 +94,7 @@ const Signup = ({ navigation }) => {
                 isSubmitting will be triggered to true. if handleSubmit been triggered. 
               */}
               {!isSubmitting && (
-                <RegularButton onPress={handleSubmit}>Sign Up</RegularButton>
+                <RegularButton onPress={handleSubmit}>Submit</RegularButton>
               )}
               {isSubmitting && (
                 <RegularButton>
@@ -150,14 +102,15 @@ const Signup = ({ navigation }) => {
                 </RegularButton>
               )}
 
-              <PressableText
-                style={{ paddingVertical: 15 }}
-                onPress={() => {
-                  moveTo("Login");
-                }}
-              >
-                Sign in to an existing account
-              </PressableText>
+              <RowContainer>
+                <PressableText
+                  onPress={() => {
+                    moveTo("Login");
+                  }}
+                >
+                  Back To Login
+                </PressableText>
+              </RowContainer>
             </>
           )}
         </Formik>
@@ -166,4 +119,4 @@ const Signup = ({ navigation }) => {
   );
 };
 
-export default Signup;
+export default ForgotPassword;
