@@ -11,6 +11,7 @@ import InfoCard from "../components/Cards/InfoCards";
 // Styled components
 import styled from "styled-components/native";
 import { ScreenHeight } from "../components/PhoneDimensions";
+import PressableText from "../components/Texts/PressableText";
 
 const TopBg = styled.View`
   background-color: ${darkGray};
@@ -21,7 +22,12 @@ const TopBg = styled.View`
   top: -30px;
 `;
 
-const Dashboard = () => {
+const Dashboard = ({ navigation }) => {
+  // Parameter payload will be used to pass some data along to the new screen
+  const moveTo = (screen, payload) => {
+    navigation.navigate(screen, { ...payload });
+  };
+
   return (
     <MainContainer style={{ paddingTop: 0, paddingLeft: 0, paddingRight: 0 }}>
       <TopBg />
@@ -42,6 +48,13 @@ const Dashboard = () => {
           value="3,156.00"
           date="Last 6 Months"
         />
+        <PressableText
+          onPress={() => {
+            moveTo("Schedule");
+          }}
+        >
+          Calendar
+        </PressableText>
       </MainContainer>
     </MainContainer>
   );

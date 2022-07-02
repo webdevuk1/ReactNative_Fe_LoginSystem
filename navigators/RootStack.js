@@ -13,6 +13,7 @@ import EmailVerification from "../screens/EmailVerification";
 import ForgotPassword from "../screens/ForgotPassword";
 import ResetPassword from "../screens/ResetPassword";
 import Dashboard from "../screens/Dashboard";
+import Schedule from "../screens/Schedule";
 
 // Components
 import Avatar from "../components/Buttons/Avatar";
@@ -58,6 +59,11 @@ const RootStack = (props) => {
           name="ResetPassword"
           component={ResetPassword}
           options={{ headerTitle: "Reset Password" }}
+        />
+        <Stack.Screen
+          name="Schedule"
+          component={Schedule}
+          options={{ headerTitle: "Calendar" }}
         />
         <Stack.Screen
           name="Dashboard"
